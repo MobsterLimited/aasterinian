@@ -6,8 +6,8 @@ We've been using Juggernaut (https://github.com/maccman/juggernaut) for quite so
 Though since it has been deprecated and not working so on node higher then 8.0 we conceived our own replacement named Aasterinian
 .
 
-<div style="float: left"><img src="https://raw.github.com/Govannon/aasterinian/master/logo.png" /></div> 
-    Aasterinian is the draconic deity who serves as Io's messenger. Her symbol is a grinning dragon's head. Aasternian appears as a huge brass dragon who is always grinning. 
+
+> Aasterinian is the draconic deity who serves as Io's messenger. Her symbol is a grinning dragon's head. Aasternian appears as a huge brass dragon who is always grinning. 
     
 http://en.wikipedia.org/wiki/Dragon_deities#Aasterinian
 
