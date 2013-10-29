@@ -4,25 +4,43 @@ window.Aasterinian=
   host: '$HOST'
   port: '$PORT'
   channel: '$CHANNEL'
-
-  Callback: (data)->
-    console.log "To use a custom callback define a function like : Aasterinian.Callback=function(data){...};, data is :"
-    console.log data
+  socket: null
+  callbacks: {
+    default: (data)->
+      console.log "To use a custom callback define a function like : Aasterinian.Callback=function(data){...};, data is :"
+      console.log data
+  }
 
   LoadSocketIo: ->
     js = document.createElement("script")
     js.type = "text/javascript"
-    js.src = "http://#{Aasterinian.host}:#{Aasterinian.port}/socket.io/socket.io.js"
+    js.src = "http://#{@host}:#{@port}/socket.io/socket.io.js"
     document.head.appendChild js
 
   Connect: ->
-    socket = io.connect("http://#{Aasterinian.host}:#{Aasterinian.port}")
-    socket.on "connect", =>
-      socket.emit "subscribe",
-        channel: Aasterinian.channel
-    socket.on "message", (data) ->
-      Aasterinian.Callback(JSON.parse(data.text))
+    Aasterinian.socket=io.connect("http://#{@host}:#{@port}")
+    Aasterinian.socket.on "message", (data) ->
+      if Aasterinian.callbacks[data.channel]?
+        Aasterinian.callbacks[data.channel] JSON.parse(data.text)
+      else
+        Aasterinian.callbacks.default JSON.parse(data.text)
+
+    Aasterinian.Subscribe @channel, @Callback unless @channel=='undefined'
     Aasterinian.connected = true
+
+  Subscribe: (channel, callback=null)->
+    Aasterinian.callbacks[channel]=callback if callback?
+    if Aasterinian.socket?.emit
+      Aasterinian.socket.emit "subscribe", channel: channel
+    else
+      setTimeout ->
+        console.log "retrying subscribe"
+        Aasterinian.Subscribe channel
+      ,100
+
+
+
+    null
 
   TryToConnect: ->
     setTimeout ->

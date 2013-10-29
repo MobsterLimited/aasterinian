@@ -11,7 +11,7 @@ Though since it has been deprecated and not working so on node higher then 8.0 w
     
 http://en.wikipedia.org/wiki/Dragon_deities#Aasterinian
 
-<div style="clear: both">
+**Usage**
 
 The usage is quite simple, to run it use :
 
@@ -23,15 +23,38 @@ By default it will use port 8889, if you want to use a custom port simply give t
 
 In your html you just include the following :
 
-    <script type='application/javascript' src='http://127.0.0.1:9090/?channel=mychannel'>
+    <script type='application/javascript' src='http://127.0.0.1:9090'>
 
-Whenever a message (as JSON) is being published via redis to the mychannel prefix, it will be pushed to the browser. You can create a javascript callback to handle the data (which is in JSON) like :
+To subscribe immediately to a channel add the param channel=myChannel like 
 
-    Aasterinian.Callback(data)
+    <script type='application/javascript' src='http://127.0.0.1:9090/?channel=myChannel'>
 
-Dependencies :
+
+Whenever a message (as JSON) is being published via redis to the mychannel prefix, it will be pushed to the browser. If no callbacks are specified , it will call the default callback. You can change the default callback using : 
+
+    Aasterinian.callbacks.default=function(data){...};
+
+**Custom callbacks for channel**
+
+To register on multiple channels with their own callbacks you can use : 
+
+    Aasterinian.Subscribe('secondChannel', function(data){...);});
+    
+**Dependencies** :
 
 * Node
 * Socket.io
 * Coffee
 * Redis
+
+**Example index.html**
+
+    <html>
+      <head>
+        <script type="application/javascript" src="http://localhost:8888/?channel=firstChannel"></script>
+        <script>
+            Aasterinian.callbacks.default=function(data){console.log(data);};
+            Aasterinian.Subscribe('secondChannel', function(data){alert(data);});
+        </script>
+    </head>
+</html>
