@@ -3,7 +3,7 @@ window.Aasterinian=
   connected: false
   host: '$HOST'
   port: '$PORT'
-  channel: 'Aasterinian-$CHANNEL'
+  channel: '$CHANNEL'
 
   Callback: (data)->
     console.log "To use a custom callback define a function like : Aasterinian.Callback=function(data){...};, data is :"
