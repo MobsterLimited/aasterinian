@@ -1,0 +1,9 @@
+<html>
+    <head>
+        <script type="application/javascript" src="http://localhost:8888/?channel=firstChannel"></script>
+        <script>
+            Aasterinian.callbacks.default=function(data){console.log(data);};
+            Aasterinian.Subscribe('secondChannel', function(data){alert(data);});
+        </script>
+    </head>
+</html>
