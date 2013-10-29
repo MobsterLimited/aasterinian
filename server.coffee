@@ -10,14 +10,17 @@ handler = (request, res) ->
   cs=cs.replace('$PORT', port)
   res.end coffeeScript.compile(cs)
 
-port = 9090
+requested_port = process.argv[process.argv.length-1]
+port = requested_port if requested_port.match(/^\d+$/)
+port = 8889 unless port?
+
 app = require("http").createServer(handler)
 io = require("socket.io").listen(app)
 fs = require("fs")
 redis = require("redis")
 coffeeScript = require 'coffee-script'
 
-app.listen port
+app.listen (port)
 redisClient = redis.createClient()
 redisClient.on "error", (err) ->
   console.log "error event - " + redisClient.host + ":" + redisClient.port + " - " + err

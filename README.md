@@ -1,7 +1,7 @@
 Aasterinian
 ===========
 
-We've been using Juggernaut (https://github.com/maccman/juggernaut) for quite some while and it served it purpose very well for us.
+We've been using Juggernaut (https://github.com/maccman/juggernaut) for quite some time and it served it purpose very well.
 
 Though since it has been deprecated and not working so on node higher then 8.0 we conceived our own replacement named Aasterinian
 .
@@ -17,8 +17,11 @@ The usage is quite simple, to run it use :
 
     coffee server.coffee -n
 
-And then in your html you just include the following :
+By default it will use port 8889, if you want to use a custom port simply give the port number as last argument like : 
 
+    coffee server.coffee -n 8080
+
+In your html you just include the following :
 
     <script type='application/javascript' src='http://127.0.0.1:9090/?channel=mychannel'>
 
