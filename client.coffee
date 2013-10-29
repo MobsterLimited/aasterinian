@@ -26,10 +26,10 @@ window.Aasterinian=
 
   TryToConnect: ->
     setTimeout ->
-      if io is `undefined`
-        do Aasterinian.TryToConnect
-      else
+      if io?
         do Aasterinian.Connect
+      else
+        do Aasterinian.TryToConnect
     , 100
 
 do Aasterinian.LoadSocketIo
