@@ -35,11 +35,10 @@ coffee server.coffee -n -b 192.168.0.1 -p 8080 -s 192.168.0.2 -r 6380\n
     url_parts = url.parse request.url, true
     [host, port] = request.headers.host.split(':')
     res.writeHead 200
-    cs=fs.readFileSync(__dirname + "/client.coffee", 'utf8')
-    cs=cs.replace('$CHANNEL', url_parts.query['channel'])
-    cs=cs.replace('$HOST', host)
-    cs=cs.replace('$PORT', port)
-    res.end coffeeScript.compile(cs)
+    customized=cs.replace('$CHANNEL', url_parts.query['channel'])
+    customized=customized.replace('$HOST', host)
+    customized=customized.replace('$PORT', port)
+    res.end coffeeScript.compile(customized)
 
   Run: ->
     app.listen(@settings.port, @settings.host)
@@ -71,6 +70,7 @@ coffee server.coffee -n -b 192.168.0.1 -p 8080 -s 192.168.0.2 -r 6380\n
   app=require("http").createServer(RequestHandler)
   io=require("socket.io").listen(app)
   fs=require("fs")
+  cs=fs.readFileSync(__dirname + "/client.coffee", 'utf8')
   redis=require("redis")
   coffeeScript=require 'coffee-script'
 
