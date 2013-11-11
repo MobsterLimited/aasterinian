@@ -4,6 +4,7 @@ class Aasterinian
     host: '0.0.0.0'
     redisPort: 6379
     redisHost: '127.0.0.1'
+    transports: ['xhr-polling']
   }
 
   Help: ->
