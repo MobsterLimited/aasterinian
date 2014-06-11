@@ -33,13 +33,16 @@ coffee server.coffee -n -b 192.168.0.1 -p 8080 -s 192.168.0.2 -r 6380\n
 
   RequestHandler = (request, res) ->
     url = require 'url'
-    url_parts = url.parse request.url, true
-    [host, port] = request.headers.host.split(':')
-    res.writeHead 200
-    customized=cs.replace('$CHANNEL', url_parts.query['channel'])
-    customized=customized.replace('$HOST', host)
-    customized=customized.replace('$PORT', port)
-    res.end coffeeScript.compile(customized)
+    try
+      url_parts = url.parse request.url, true
+      [host, port] = request.headers.host.split(':')
+      res.writeHead 200
+      customized=cs.replace('$CHANNEL', url_parts.query['channel'])
+      customized=customized.replace('$HOST', host)
+      customized=customized.replace('$PORT', port)
+      res.end coffeeScript.compile(customized)
+    catch error
+      console.log "Error: #{error}"
 
   Run: ->
     app.listen(@settings.port, @settings.host)
