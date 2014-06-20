@@ -1,54 +1,65 @@
+((factory) ->
+  if typeof define is "function" and define.amd
+    define [], factory
+  else
+    factory Aasterinian
+  return
+) (Aasterinian) ->
+  Aasterinian =
+    connected: false
+    host: '$HOST'
+    port: '$PORT'
+    channel: '$CHANNEL'
+    socket: null
+    callbacks: {
+      default: (data)->
+        console.log "To use a custom callback define a function like : Aasterinian.Callback=function(data){...};, data is :"
+        console.log data
+    }
 
-window.Aasterinian=
-  connected: false
-  host: '$HOST'
-  port: '$PORT'
-  channel: '$CHANNEL'
-  socket: null
-  callbacks: {
-    default: (data)->
-      console.log "To use a custom callback define a function like : Aasterinian.Callback=function(data){...};, data is :"
-      console.log data
-  }
+    Activate: ->
+      do Aasterinian.LoadSocketIo
+      do Aasterinian.TryToConnect
 
-  LoadSocketIo: ->
-    js = document.createElement("script")
-    js.type = "text/javascript"
-    js.src = "http://#{@host}:#{@port}/socket.io/socket.io.js"
-    document.head.appendChild js
+    LoadSocketIo: ->
+      js = document.createElement("script")
+      js.type = "text/javascript"
+      js.src = "http://#{@host}:#{@port}/socket.io/socket.io.js"
+      document.head.appendChild js
 
-  Connect: ->
-    Aasterinian.socket=io.connect("http://#{@host}:#{@port}")
-    Aasterinian.socket.on "message", (data) ->
-      if Aasterinian.callbacks[data.channel]?
-        Aasterinian.callbacks[data.channel] JSON.parse(data.text)
+    Connect: ->
+      Aasterinian.socket=io.connect("http://#{@host}:#{@port}")
+      Aasterinian.socket.on "message", (data) ->
+        if Aasterinian.callbacks[data.channel]?
+          Aasterinian.callbacks[data.channel] JSON.parse(data.text)
+        else
+          Aasterinian.callbacks.default JSON.parse(data.text)
+
+      Aasterinian.Subscribe @channel, @Callback unless @channel=='undefined'
+      Aasterinian.connected = true
+
+    Subscribe: (channel, callback=null)->
+      Aasterinian.callbacks[channel]=callback if callback?
+      if Aasterinian.socket?.emit
+        Aasterinian.socket.emit "subscribe", channel: channel
       else
-        Aasterinian.callbacks.default JSON.parse(data.text)
+        setTimeout ->
+          console.log "retrying subscribe"
+          Aasterinian.Subscribe channel
+        ,100
 
-    Aasterinian.Subscribe @channel, @Callback unless @channel=='undefined'
-    Aasterinian.connected = true
 
-  Subscribe: (channel, callback=null)->
-    Aasterinian.callbacks[channel]=callback if callback?
-    if Aasterinian.socket?.emit
-      Aasterinian.socket.emit "subscribe", channel: channel
-    else
+
+      null
+
+    TryToConnect: ->
       setTimeout ->
-        console.log "retrying subscribe"
-        Aasterinian.Subscribe channel
-      ,100
+        if io?
+          do Aasterinian.Connect
+        else
+          do Aasterinian.TryToConnect
+      , 100
 
+if (Aasterinian?)
+  do Aasterinian.Activate
 
-
-    null
-
-  TryToConnect: ->
-    setTimeout ->
-      if io?
-        do Aasterinian.Connect
-      else
-        do Aasterinian.TryToConnect
-    , 100
-
-do Aasterinian.LoadSocketIo
-do Aasterinian.TryToConnect
