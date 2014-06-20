@@ -4,7 +4,7 @@
   else
     root.Aasterinian = factory()
   return
-) this, (MyAasterinian) ->
+) this, () ->
 
     connected: false
     host: '$HOST'
@@ -18,7 +18,7 @@
     }
 
     Activate: ->
-      do Aasterinian.LoadSocketIo
+      do Aasterinian.LoadSocketIo unless typeof define is "function" and define.amd
       do Aasterinian.TryToConnect
 
     LoadSocketIo: ->
