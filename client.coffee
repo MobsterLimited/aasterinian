@@ -1,11 +1,10 @@
-((factory) ->
+((root, factory) ->
   if typeof define is "function" and define.amd
     define [], factory
   else
-    factory Aasterinian
+    root.Aasterinian = factory()
   return
-) (Aasterinian) ->
-  window.Aasterinian =
+) this, () ->
     connected: false
     host: '$HOST'
     port: '$PORT'
@@ -61,5 +60,6 @@
       , 100
 
 if (Aasterinian?)
+  console.log "Activating Aasterinian"
   do Aasterinian.Activate
 
