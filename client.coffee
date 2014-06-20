@@ -5,7 +5,7 @@
     factory Aasterinian
   return
 ) (Aasterinian) ->
-  Aasterinian =
+  window.Aasterinian =
     connected: false
     host: '$HOST'
     port: '$PORT'
