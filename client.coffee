@@ -4,7 +4,7 @@
   else
     root.Aasterinian = factory()
   return
-) this, () ->
+) this, (MyAasterinian) ->
 
     connected: false
     host: '$HOST'
@@ -44,11 +44,10 @@
         Aasterinian.socket.emit "subscribe", channel: channel
       else
         setTimeout ->
+          Aasterinian.TryToConnect unless Aasterinian.socket?
           console.log "retrying subscribe"
           Aasterinian.Subscribe channel
         ,100
-
-
 
       null
 
