@@ -12,13 +12,13 @@
     socket: null
     callbacks: {
       default: (data)->
-        console.log "To use a custom callback define a function like : Aasterinian.Callback=function(data){...};, data is :"
+        console.log "To use a custom callback define a function like : @Callback=function(data){...};, data is :"
         console.log data
     }
 
     Activate: ->
-      do Aasterinian.LoadSocketIo
-      do Aasterinian.TryToConnect
+      do @LoadSocketIo
+      do @TryToConnect
 
     LoadSocketIo: ->
       js = document.createElement("script")
@@ -27,24 +27,24 @@
       document.head.appendChild js
 
     Connect: ->
-      Aasterinian.socket=io.connect("http://#{@host}:#{@port}")
-      Aasterinian.socket.on "message", (data) ->
-        if Aasterinian.callbacks[data.channel]?
-          Aasterinian.callbacks[data.channel] JSON.parse(data.text)
+      @socket=io.connect("http://#{@host}:#{@port}")
+      @socket.on "message", (data) ->
+        if @callbacks[data.channel]?
+          @callbacks[data.channel] JSON.parse(data.text)
         else
-          Aasterinian.callbacks.default JSON.parse(data.text)
+          @callbacks.default JSON.parse(data.text)
 
-      Aasterinian.Subscribe @channel, @Callback unless @channel=='undefined'
-      Aasterinian.connected = true
+      @Subscribe @channel, @Callback unless @channel=='undefined'
+      @connected = true
 
     Subscribe: (channel, callback=null)->
-      Aasterinian.callbacks[channel]=callback if callback?
-      if Aasterinian.socket?.emit
-        Aasterinian.socket.emit "subscribe", channel: channel
+      @callbacks[channel]=callback if callback?
+      if @socket?.emit
+        @socket.emit "subscribe", channel: channel
       else
         setTimeout ->
           console.log "retrying subscribe"
-          Aasterinian.Subscribe channel
+          @Subscribe channel
         ,100
 
 
@@ -54,12 +54,12 @@
     TryToConnect: ->
       setTimeout ->
         if io?
-          do Aasterinian.Connect
+          do @Connect
         else
-          do Aasterinian.TryToConnect
+          do @TryToConnect
       , 100
 
 if (Aasterinian?)
   console.log "Activating Aasterinian"
-  do Aasterinian.Activate
+  do @Activate
 
