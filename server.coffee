@@ -43,6 +43,8 @@ coffee server.coffee -n -b 192.168.0.1 -p 8080 -s 192.168.0.2 -r 6380\n
       res.end coffeeScript.compile(customized)
     catch error
       console.log "Error: #{error}"
+      res.writeHead 500
+      res.end ""
 
   Run: ->
     app.listen(@settings.port, @settings.host)
