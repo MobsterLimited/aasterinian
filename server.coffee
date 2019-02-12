@@ -78,7 +78,7 @@ coffee server.coffee -n -b 192.168.0.1 -p 8080 -s 192.168.0.2 -r 6380\n
   fs=require("fs")
   cs=fs.readFileSync(__dirname + "/client.coffee", 'utf8')
   redis=require("redis")
-  coffeeScript=require 'coffee-script'
+  coffeeScript=require 'coffeescript'
 
 aasterian=new Aasterinian
 
