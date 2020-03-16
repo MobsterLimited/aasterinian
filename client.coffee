@@ -24,11 +24,11 @@
     LoadSocketIo: ->
       js = document.createElement("script")
       js.type = "text/javascript"
-      js.src = "http://#{@host}:#{@port}/socket.io/socket.io.js"
+      js.src = "/socket.io/socket.io.js"
       document.head.appendChild js
 
     Connect: ->
-      Aasterinian.socket=io.connect("http://#{@host}:#{@port}")
+      Aasterinian.socket=io.connect("#{window.location.protocol}//#{window.location.host}")
       Aasterinian.socket.on "message", (data) ->
         if Aasterinian.callbacks[data.channel]?
           Aasterinian.callbacks[data.channel] JSON.parse(data.text)
@@ -61,4 +61,3 @@
 
 if (Aasterinian?)
   do Aasterinian.Activate
-
